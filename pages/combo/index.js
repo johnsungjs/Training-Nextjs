@@ -1,6 +1,10 @@
 import {
   Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -14,17 +18,18 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const index = ({ data }) => {
-  const linkApi = "https://api.instantwebtools.net/v1/passenger?page=1&size=5";
-  console.log("data: ", data);
   const [page, setPage] = useState(1);
+  const [size, setSize] = useState(5);
   const [dataFromApi, setDataFromApi] = useState(data);
   const router = useRouter();
 
   useEffect(() => {
     axios
-      .get(`https://api.instantwebtools.net/v1/passenger?page=${page}&size=5`)
+      .get(
+        `https://api.instantwebtools.net/v1/passenger?page=${page}&size=${size}`
+      )
       .then((res) => setDataFromApi(res.data.data));
-  }, [page]);
+  }, [page, size]);
 
   function createData(id, name, trips) {
     return { id, name, trips };
@@ -77,16 +82,29 @@ const index = ({ data }) => {
         <Button
           disabled={page === 1}
           variant='contained'
-          sx={{ p: 1, mt: 2, mr: 2 }}
+          sx={{ p: 1, mt: 4, mr: 2 }}
           onClick={() => setPage(page - 1)}>
           Previous Page
         </Button>
         <Button
           variant='contained'
-          sx={{ p: 1, mt: 2 }}
+          sx={{ p: 1, mt: 4 }}
           onClick={() => setPage(page + 1)}>
           Next Page
         </Button>
+        <FormControl sx={{ p: 1, mt: 2, ml: 1 }}>
+          <InputLabel id='demo-simple-select-label'>Size</InputLabel>
+          <Select
+            labelId='demo-simple-select-label'
+            id='demo-simple-select'
+            value={size}
+            label='Size Page'
+            onChange={(e) => setSize(e.target.value)}>
+            <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={15}>15</MenuItem>
+          </Select>
+        </FormControl>
       </Paper>
     </div>
   );
